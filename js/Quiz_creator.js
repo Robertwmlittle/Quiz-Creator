@@ -8,14 +8,10 @@
 var qc = (function quizCreator(){
     function createTest(nameOfTest){
         var test = {
-            [nameOfTest]:{
-
-            }
+            [nameOfTest]:{}
         };
-
         return test;
-    }
-    
+    }  
     function createScoreRequirements(test ,passingScore, failingScore){
         if(typeof passingScore === 'number' && typeof failingScore === 'number'){
         test.score = {};
@@ -57,13 +53,9 @@ var qc = (function quizCreator(){
         multipleSelectQuestion:multipleSelectQuestion
     };
 })();
-
 var test = qc.createTest('bob');
 qc.createScoreRequirements(test.bob, 70, 69); 
 test.bob.question1 = qc.createSingleAnwerQuestion('Why do birds suddenly appear', 'because you are near', ['Sandwhiches', 'Psycotic Space Nuns', 'Sasquatch']);
 test.bob.question2= qc.createSingleAnwerQuestion('What color is the sky', 'blue', ['bill', 'Jim Raynors Smile', 'Zerg Creep']);
 test.bob.question3 = qc.multipleSelectQuestion('What does Captain Picard Like?', ['Tea Earl Grey Hot', 'Riding Horses'], ['Children', 'Lots of Noise']);
-//test.bob.question4 = qc.multipleSelectQuestion('What does the fox say', 'ning ning ning', ['I would like some tea', 'nope']);
-//test.bob.question5 = qc.multipleSelectQuestion('who is the flash', 'Barry Allen', 'Sindregosa');
 console.log(test.bob);
-
