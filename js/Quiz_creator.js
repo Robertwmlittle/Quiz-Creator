@@ -1,10 +1,3 @@
-// What this library will do 
-// 1.   get the name of the test and and have the name of the test be the container for the main test data
-// 2.   Create an object that contains the question, answer, and the distractors as an array and push to the main test container
-// 2.1  Be able to allow the user to create single Answer questions and multiple answer questions
-// 3    Create a function that checks the answer and returns true 
-// 4    Create the ability for the user to define a score for the test on the test object
-// 5    Create a function that will allow the user to define what is a passing score and what is not a passing score
 var qc = (function quizCreator(){
     function createTest(nameOfTest){
         var test = {
@@ -26,7 +19,8 @@ var qc = (function quizCreator(){
     var questionToReturn = {
         question:question,
         answer:answer,
-        distractors:distractors
+        distractors:distractors,
+        isCorrect:false
     };
     if(Array.isArray(distractors)){
     return questionToReturn;
@@ -38,7 +32,8 @@ var qc = (function quizCreator(){
          var questionToReturn ={
              question:question,
              answers:answers,
-             distractors:distractors
+             distractors:distractors,
+             isCorrect:false
          };   
     if(Array.isArray(answers) && Array.isArray(distractors)){
         return questionToReturn;    
@@ -46,16 +41,29 @@ var qc = (function quizCreator(){
         console.log(`${answers} or ${distractors} must be entered as arrays, your question is currently set to undefined`);
     } 
     }
+    function changeCorrectState(question){
+        if(question.isCorrect === false){
+        question.isCorrect = true;
+        }else{
+            question.isCorrect = false;
+        }
+    }
     return{
         createTest:createTest,
         createScoreRequirements:createScoreRequirements,
         createSingleAnwerQuestion:createSingleAnwerQuestion,
-        multipleSelectQuestion:multipleSelectQuestion
+        multipleSelectQuestion:multipleSelectQuestion,
+        changeCorrectState:changeCorrectState
     };
+
 })();
 var test = qc.createTest('bob');
 qc.createScoreRequirements(test.bob, 70, 69); 
 test.bob.question1 = qc.createSingleAnwerQuestion('Why do birds suddenly appear', 'because you are near', ['Sandwhiches', 'Psycotic Space Nuns', 'Sasquatch']);
 test.bob.question2= qc.createSingleAnwerQuestion('What color is the sky', 'blue', ['bill', 'Jim Raynors Smile', 'Zerg Creep']);
 test.bob.question3 = qc.multipleSelectQuestion('What does Captain Picard Like?', ['Tea Earl Grey Hot', 'Riding Horses'], ['Children', 'Lots of Noise']);
+test.bob.question2.isCorrect = true;
+qc.changeCorrectState(test.bob.question3);
+qc.changeCorrectState(test.bob.question2);
+
 console.log(test.bob);
