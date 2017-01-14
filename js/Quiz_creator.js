@@ -17,14 +17,19 @@ var qc = (function quizCreator() {
         }
     }
 
-    function createSingleAnwerQuestion(question, answer, distractors, questionWorth) {
+    function createSingleAnwerQuestion(question, answers, distractors, questionWorth) {
+        var questionDistractor = distractors; 
         var questionToReturn = {
             question: question,
-            answer: answer,
-            distractors: distractors,
+            answers: {answer:answers, isClicked:false},
+            Distractor: [],
             questionWorth: questionWorth,
             isCorrect: false
         };
+         for(let i= 0; i < questionDistractor.length; i++ ){
+                questionToReturn.Distractor.push({distractor:questionDistractor[i], isClicked:false});
+        }
+
         if (typeof questionWorth === 'number') {
             if (Array.isArray(distractors)) {
                 return questionToReturn;
@@ -37,13 +42,22 @@ var qc = (function quizCreator() {
     }
 
     function multipleSelectQuestion(question, answers, distractors, questionWorth) {
+         var questionAnswers = answers;
+        var questionDistractors = distractors;
         var questionToReturn = {
             question: question,
-            answers: answers,
-            distractors: distractors,
+            Answers: [],
+            Distractors:[],
             questionWorth: questionWorth,
             isCorrect: false
         };
+        for(let i = 0; i < questionAnswers.length; i++){
+                questionToReturn.Answers.push({answer:questionAnswers[i], isClicked:false}); 
+        }
+
+        for(let i= 0; i < questionDistractors.length; i++ ){
+                questionToReturn.Distractors.push({distractor:questionDistractors[i], isClicked:false});
+        }
         if (typeof questionWorth === 'number') {
             if (Array.isArray(answers) && Array.isArray(distractors)) {
                 return questionToReturn;
@@ -56,12 +70,18 @@ var qc = (function quizCreator() {
     }
 
     function changeCorrectState(question) {
-        if (question.isCorrect === false) {
-            question.isCorrect = true;
+        if ([question].isCorrect === false) {
+            [question].isCorrect = true;
         } else {
-            question.isCorrect = false;
+            [question].isCorrect = false;
         }
     }
+
+    // function checkIfAnswerIsCorrect(test){
+    //     if(test.answers){
+    //         ///test to make sure this 
+    //     }
+    // }
 
     return {
         createTest: createTest,
@@ -75,8 +95,9 @@ var qc = (function quizCreator() {
 var test = qc.createTest('bob');
 qc.createScoreRequirements(test.bob, 70, 69);
 test.bob.question1 = qc.createSingleAnwerQuestion('Why do birds suddenly appear', 'because you are near', ['Sandwhiches', 'Psycotic Space Nuns', 'Sasquatch'], 10);
-test.bob.question2 = qc.createSingleAnwerQuestion('What color is the sky', 'blue', ['bill', 'Jim Raynors Smile', 'Zerg Creep'], 'two');
-test.bob.question3 = qc.multipleSelectQuestion('What does Captain Picard Like?', ['Tea Earl Grey Hot', 'Riding Horses'], ['Children', 'Lots of Noise'], 23);
+//test.bob.question2 = qc.createSingleAnwerQuestion('What color is the sky', 'blue', ['bill', 'Jim Raynors Smile', 'Zerg Creep'], 'two');
+//test.bob.question3 = qc.multipleSelectQuestion('What does Captain Picard Like?', ['Tea Earl Grey Hot', 'Riding Horses'], ['Children', 'Lots of Noise'], 23);
+test.bob.question2= qc.multipleSelectQuestion('what does the fox say', ['jim', 'phil'], ['howard', 'steven', 'devin'], 20);
 //test.bob.question2.isCorrect = true;
 qc.changeCorrectState(test.bob.question3);
 //qc.changeCorrectState(test.bob.question2);
