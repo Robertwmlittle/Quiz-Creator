@@ -13,13 +13,15 @@ var qc = (function quizCreator() {
             test.score.passingScore = passingScore;
             test.score.failingScore = failingScore;
         } else {
-            console.log(`${passingScore} and ${failingScore} need to be a number`);
+            console.error(`${passingScore} and ${failingScore} need to be a number`);
         }
     }
 
-    function createSingleAnwerQuestion(question, answers, distractors, questionWorth) {
-        var questionDistractor = distractors;
-        var questionToReturn = {
+    function createSingleAnswerQuestion(question, answers, distractors, questionWorth) {
+        let questionDistractor = distractors;
+        if (typeof questionWorth === 'number') {
+            if (Array.isArray(distractors)) {
+            let questionToReturn = {
             question: question,
             answers: {
                 answer: answers,
@@ -35,50 +37,51 @@ var qc = (function quizCreator() {
                 isClicked: false
             });
         }
-
-        if (typeof questionWorth === 'number') {
-            if (Array.isArray(distractors)) {
                 return questionToReturn;
             } else {
-                console.log(`${distractors} is not an array, please enter your distractors as an array, your question is currently set to undefined as a result`);
+                console.error(`${distractors} is not an array, please enter your distractors as an array`);
+                return `${distractors} is not an array, please enter your distractors as an array`;
             }
         } else {
-            console.log(`${questionWorth} is not a number please change this argument to a number, your qustion object is undefined`);
+            console.error(`On question "${question}" ${questionWorth} is not a number please change this argument to a number`);
+            return `On question "${question}" ${questionWorth} is not a number please change this argument to a number`;
         }
     }
 
     function multipleSelectQuestion(question, answers, distractors, questionWorth) {
-        var questionAnswers = answers;
-        var questionDistractors = distractors;
-        var questionToReturn = {
-            question: question,
-            Answers: [],
-            Distractors: [],
-            questionWorth: questionWorth,
-            isCorrect: false
-        };
-        for (let i = 0; i < questionAnswers.length; i++) {
-            questionToReturn.Answers.push({
-                answer: questionAnswers[i],
-                isClicked: false
-            });
-        }
-
-        for (let i = 0; i < questionDistractors.length; i++) {
-            questionToReturn.Distractors.push({
-                distractor: questionDistractors[i],
-                isClicked: false
-            });
-        }
+        let questionAnswers = answers;
+        let questionDistractors = distractors;
         if (typeof questionWorth === 'number') {
             if (Array.isArray(answers) && Array.isArray(distractors)) {
+                let questionToReturn = {
+                question: question,
+                Answers: [],
+                Distractors: [],
+                questionWorth: questionWorth,
+                isCorrect: false
+        };
+            for (let i = 0; i < questionAnswers.length; i++) {
+                questionToReturn.Answers.push({
+                    answer: questionAnswers[i],
+                    isClicked: false
+                });
+        }
+
+            for (let i = 0; i < questionDistractors.length; i++) {
+                questionToReturn.Distractors.push({
+                    distractor: questionDistractors[i],
+                    isClicked: false
+                });
+            }
                 return questionToReturn;
             } else {
-                console.log(`${answers} or ${distractors} must be entered as arrays, your question is currently set to undefined`);
+                console.error(`${answers} or ${distractors} must be entered as arrays`);
             }
         } else {
-            console.log(`${questionWorth} is not a number please re enter this argument as a number, your question object is undefined`);
+            console.error(`${questionWorth} is not a number please re enter this argument as a number`);
         }
+        
+    
     }
 
     function changeCorrectState(question) {
@@ -98,7 +101,7 @@ var qc = (function quizCreator() {
     return {
         createTest: createTest,
         createScoreRequirements: createScoreRequirements,
-        createSingleAnwerQuestion: createSingleAnwerQuestion,
+        createSingleAnswerQuestion: createSingleAnswerQuestion,
         multipleSelectQuestion: multipleSelectQuestion,
         changeCorrectState: changeCorrectState
     };
@@ -106,9 +109,9 @@ var qc = (function quizCreator() {
 })();
 var test = qc.createTest('bob');
 qc.createScoreRequirements(test.bob, 70, 69);
-test.bob.question1 = qc.createSingleAnwerQuestion('Why do birds suddenly appear', 'because you are near', ['Sandwhiches', 'Psycotic Space Nuns', 'Sasquatch'], 10);
-//test.bob.question2 = qc.createSingleAnwerQuestion('What color is the sky', 'blue', ['bill', 'Jim Raynors Smile', 'Zerg Creep'], 'two');
-//test.bob.question3 = qc.multipleSelectQuestion('What does Captain Picard Like?', ['Tea Earl Grey Hot', 'Riding Horses'], ['Children', 'Lots of Noise'], 23);
+test.bob.question1 = qc.createSingleAnswerQuestion('Why do birds suddenly appear', 'because you are near', ['Sandwhiches', 'Psycotic Space Nuns', 'Sasquatch'], 10);
+test.bob.question4 = qc.createSingleAnswerQuestion('What color is the sky', 'blue', ['bill', 'Jim Raynors Smile', 'Zerg Creep'], 'dog');
+test.bob.question3 = qc.multipleSelectQuestion('What does Captain Picard Like?', ['Tea Earl Grey Hot', 'Riding Horses'], ['Children', 'Lots of Noise'], 23);
 test.bob.question2 = qc.multipleSelectQuestion('what does the fox say', ['jim', 'phil'], ['howard', 'steven', 'devin'], 20);
 //test.bob.question2.isCorrect = true;
 qc.changeCorrectState(test.bob.question3);
